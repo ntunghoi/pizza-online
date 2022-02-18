@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: engine
+  template:
+    metadata:
+      name: engine
+      labels:
+        app: engine
+        version: v1
+    spec:
+      containers:
+        - name: engine
+          image: ntunghoi/engine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9081
+          env:
+            - name: VERSION
+              value: "v1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: engine
+  labels:
+    app: engine
+spec:
+  ports:
+    - port: 8080
+      targetPort: 9081
+      name: http
+  selector:
+    app: engine

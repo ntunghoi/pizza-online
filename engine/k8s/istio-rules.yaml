@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: engine-service-destination
+spec:
+  host: engine-service
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: engine-service-route
+spec:
+  hosts:
+    - "engine.ntunghoi.com"
+  gateways:
+    - engine-gateway
+  http:
+    - route:
+        - destination:
+            host: engine
+            port:
+              number: 8080
